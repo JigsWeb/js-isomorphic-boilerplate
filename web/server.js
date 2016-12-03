@@ -1,36 +1,46 @@
 import path from 'path'
 import Express from 'express'
 import React from 'react'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
+import { browserHistory, match, RouterContext } from 'react-router';
+import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
 
-import reducers from './redux';
-import { App } from './containers'
+import routes from './src/routes';
+import reducers from './src/redux';
+import { App } from './src/containers';
 
-const app = Express();
-
-// This is fired every time the server side receives a request
-app.use(handleRender);
-
-// We are going to fill these out in the sections to follow
+const app = Express()
+  .use('/static', Express.static(path.join(__dirname, '/static')))
+  .use(handleRender);
 
 function handleRender(req, res) {
-  // Create a new Redux store instance
-  const store = createStore(reducers);
+  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    if (error) {
+      res.status(500).send(error.message)
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
 
-  // Render the component to a string
-  const html = renderToString(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
+      const store = createStore(
+        reducers,
+        applyMiddleware(
+          routerMiddleware(browserHistory)
+        )
+      );
 
-  // Grab the initial state from our Redux store
-  const preloadedState = store.getState();
+      let html = (
+        <Provider store={store}>
+          { <RouterContext {...renderProps} /> }
+        </Provider>
+      );
 
-  // Send the rendered page back to the client
-  res.send(renderFullPage(html, preloadedState))
+      res.status(200).send(renderFullPage(renderToString(html), {}))
+    } else {
+      res.status(404).send('Not found')
+    }
+  })
 }
 
 
@@ -40,6 +50,11 @@ function renderFullPage(html, preloadedState) {
     <html>
       <head>
         <title>Redux Universal Example</title>
+        <link rel="stylesheet" type="text/css" href="/static/antd.min.css"/>
+        <style>
+          body{ background: #ECECEC }
+          .ant-menu-horizontal { border-bottom: none;}  
+        </style>
       </head>
       <body>
         <div id="root">${html}</div>
