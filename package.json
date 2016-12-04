@@ -53,7 +53,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch:web:server": "webpack --watch --config ./web/webpack/webpack.config.server.js --colors --display-error-details",
     "watch:web:client": "webpack --watch --config ./web/webpack/webpack.config.client.js --colors --display-error-details",
-    "start:web": "babel-node web/src/start-server.js"
+    "start:web": "babel-node web/start-server.js"
   },
   "author": "",
   "license": "ISC"
