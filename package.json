@@ -41,11 +41,19 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "node-sass": "^3.13.0",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "universal-webpack": "^0.1.41",
     "webpack": "^1.13.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --watch"
+    "watch:web:server": "webpack --watch --config ./web/webpack/webpack.config.server.js --colors --display-error-details",
+    "watch:web:client": "webpack --watch --config ./web/webpack/webpack.config.client.js --colors --display-error-details",
+    "start:web": "babel-node web/src/start-server.js"
   },
   "author": "",
   "license": "ISC"

@@ -5,18 +5,13 @@ import { createStore, applyMiddleware } from 'redux'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { browserHistory, match, RouterContext } from 'react-router';
-import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
+import { routerMiddleware } from 'react-router-redux'
 
-import routes from './src/routes';
-import reducers from './src/redux';
-import { App } from './src/containers';
-
-const app = Express()
-  .use('/static', Express.static(path.join(__dirname, '/static')))
-  .use(handleRender);
+import routes from './routes';
+import reducers from './redux';
 
 function handleRender(req, res) {
-  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+  match({ history: browserHistory, routes, location: req.url }, (error, redirectLocation, renderProps) => {
     if (error) {
       res.status(500).send(error.message)
     } else if (redirectLocation) {
@@ -43,7 +38,6 @@ function handleRender(req, res) {
   })
 }
 
-
 function renderFullPage(html, preloadedState) {
   return `
     <!doctype html>
@@ -67,4 +61,12 @@ function renderFullPage(html, preloadedState) {
     `
 }
 
-app.listen(3000, () => console.info("Server listen on "+ 3000));
+export default function(parameters)
+{
+  const app = Express()
+    .use('/static', Express.static(path.join(__dirname, '..', 'static')))
+    .use(Express.static(path.join(__dirname, '..', 'build/assets')))
+    .use(handleRender);
+
+  app.listen(3000, () => console.info("Server listen on "+ 3000));
+}

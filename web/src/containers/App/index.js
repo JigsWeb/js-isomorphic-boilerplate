@@ -5,21 +5,12 @@ import { push } from 'react-router-redux';
 import { Row, Col } from 'antd';
 import { Header } from '../../components';
 
-const style = {
-  mainWrapper: {
-    background: "#fff",
-    width: "92%",
-    margin: "0 auto",
-    borderRadius: "4px",
-    overflow: "hidden",
-    padding: "24px 6% 120px 4%",
-    marginBottom: "24px",
-    position: "relative"
-  }
-};
+import style from './style.scss';
 
-class App extends React.Component{
+export default class App extends React.Component{
   render(){
+    console.log(style);
+
     return (
       <div className="app">
 
@@ -34,13 +25,3 @@ class App extends React.Component{
     )
   }
 }
-
-export default connect(
-  () => ({}),
-  (dispatch) => ({
-    push: url => {
-      console.log("Sa passe", url);
-      dispatch(push(url));
-    }
-  })
-)(App)
