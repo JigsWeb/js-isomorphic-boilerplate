@@ -36,7 +36,7 @@ function handleRender(req, res) {
         </Provider>
       );
 
-      res.status(200).send(renderFullPage(renderToString(html), {}))
+      res.status(200).send(renderFullPage(renderToString(html), store))
     } else {
       res.status(404).send('Not found')
     }
@@ -61,6 +61,7 @@ function renderFullPage(html, preloadedState) {
         <script>
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
         </script>
+        <script type="text/javascript" src="/static/bundle.js"></script>
       </body>
     </html>
     `

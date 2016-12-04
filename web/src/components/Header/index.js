@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+
 import { Menu, Icon, Row, Col} from 'antd';
 
 const style = {
@@ -21,6 +24,10 @@ const style = {
   }
 };
 
+@connect(
+  () => ({}),
+  { push }
+)
 export default class Header extends React.Component{
   constructor(props){
     super(props);
@@ -29,7 +36,7 @@ export default class Header extends React.Component{
   }
 
   handleClick(e){
-    console.log(e.key)
+    this.props.push(`/${e.key}`);
   }
 
   render(){
